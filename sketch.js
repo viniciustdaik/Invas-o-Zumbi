@@ -7,6 +7,8 @@ const Body = Matter.Body;
 const Composites = Matter.Composites;
 const Composite = Matter.Composite;
 
+var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 let engine;
 let world;
 var ground, bridge;
@@ -33,16 +35,22 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  
   engine = Engine.create();
   world = engine.world;
   frameRate(80);
-
+  
   ground = new Base(0, height - 10, width * 2, 20);
   leftWall = new Base(100, height - 300, 200, height / 2 + 100);
   rightWall = new Base(width - 100, height - 300, 200, height / 2 + 100);
-
-  bridge = new Bridge(30, { x: 50, y: height / 2 - 140 });
-  jointPoint = new Base(width - 250, height / 2 - 100, 40, 20);
+  
+  if(!isMobile){
+    bridge = new Bridge(30, { x: 50, y: height / 2 - 140 });
+    jointPoint = new Base(width - 250, height / 2 - 100, 40, 20);
+  }else{
+    bridge = new Bridge(15, { x: 50, y: height / 2 - 140 });
+    jointPoint = new Base(width - 250, height / 2 - 100, 40, 20);
+  }
 
   Matter.Composite.add(bridge.body, jointPoint);
   jointLink = new Link(bridge, jointPoint);
