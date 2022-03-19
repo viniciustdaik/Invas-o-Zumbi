@@ -132,7 +132,7 @@ function draw() {
   
   for (var stone of stones) {
     stone.show();
-    stone.outofzone();
+    //stone.outofzone();
     var pos = stone.body.position;
     //if(stone.x >= windowWidth || stone.x <= 0){
     //  stone.x = random(width / 2, 30);
