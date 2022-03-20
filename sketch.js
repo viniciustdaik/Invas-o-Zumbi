@@ -27,6 +27,9 @@ var isGameover = false;
 var isVictory = false;
 var time = 61, timeX, timeY = 45, timeTextSize = 45;
 
+var permission = false, allowed = false;
+var backgroundscreenerror;
+
 function preload() {
   zombie1 = loadImage("./assets/zombie/zombie1.png");
   zombie2 = loadImage("./assets/zombie/zombie2.png");
@@ -72,7 +75,7 @@ function setup() {
     cantplay();
     bridge = new Bridge(15, { x: 50, y: height / 2 - 140 });
     jointPoint = new Base(width - 250, height / 2 - 100, 40, 20);
-    var backgroundscreenerror = createSprite(windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
+    backgroundscreenerror = createSprite(windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
     backgroundscreenerror.shapeColor = "black";
     zombie = createSprite(width / 2, height - 100, 50, 50);
     zombie.visible = false;
@@ -94,25 +97,39 @@ function setup() {
   }
   if(!isMobile && windowWidth > 566){
     zombie = createSprite(width / 2, height - 100, 50, 50);
+    zombie.addAnimation("lefttoright", zombie1, zombie2, zombie1);
+    zombie.addAnimation("righttoleft", zombie3, zombie4, zombie3);
+    zombie.addImage("sad", sadzombie);
+    zombie.addImage("sad2", sadzombie2);
+    
+    zombie.scale = 0.1;
+    zombie.velocityX = 10;
+    
+    breakButton = createButton("");
+    breakButton.position(width - 200, height / 2 - 50);
+    breakButton.class("breakbutton");
+    breakButton.mousePressed(handleButtonPress);
   }
-
-  zombie.addAnimation("lefttoright", zombie1, zombie2, zombie1);
-  zombie.addAnimation("righttoleft", zombie3, zombie4, zombie3);
-  zombie.addImage("sad", sadzombie);
-  zombie.addImage("sad2", sadzombie2);
-  
-  zombie.scale = 0.1;
-  zombie.velocityX = 10;
-
-  breakButton = createButton("");
-  breakButton.position(width - 200, height / 2 - 50);
-  breakButton.class("breakbutton");
-  breakButton.mousePressed(handleButtonPress);
 }
 
 function draw() {
   background(backgroundImage);
   Engine.update(engine);
+  if(!isMobile && windowWidth <= 566){
+    if(permission == true && allowed == false){
+      allowSmallComputerScreen();
+    }
+    if(keyDown("i") && permission == false){
+      if(keyWentDown("z") && permission == false){
+        //if(keyDown("e") && permission == false){
+          permission = true;
+          console.log("Permissão");
+        //}
+      }
+    }
+  }
+  if(!isMobile && windowWidth > 566 || isMobile || permission == true && allowed == true){
+    
   if(time >= 0){
     //textSize(45);
     TimeDisplay();
@@ -168,7 +185,7 @@ function draw() {
     left = false;
     right = true;
   }
-
+  }
   drawSprites();
 }
 
@@ -234,7 +251,10 @@ function cantplay(){
     },
     function(isConfirm) {
       if (isConfirm) {
-        location.reload();
+        if(permission == false){
+          location.reload();
+        }
+        
       }
     }
   );
@@ -425,5 +445,31 @@ function TimeDisplay(){//1 Minuto.
     if(time <= 2 && time >= 1){//1.
       text("1", timeX, timeY);
     }
+  }
+}
+
+function allowSmallComputerScreen(){
+  if(allowed == false){
+    bridge = new Bridge(15, { x: 50, y: height / 2 - 140 });
+    jointPoint = new Base(width - 250, height / 2 - 100, 40, 20);
+
+    zombie = createSprite(width / 2, height - 100, 50, 50);
+    
+    zombie.addAnimation("lefttoright", zombie1, zombie2, zombie1);
+    zombie.addAnimation("righttoleft", zombie3, zombie4, zombie3);
+    zombie.addImage("sad", sadzombie);
+    zombie.addImage("sad2", sadzombie2);
+    
+    zombie.scale = 0.1;
+    zombie.velocityX = 10;
+    
+    backgroundscreenerror.visible = false;
+    
+    breakButton = createButton("");
+    breakButton.position(width - 200, height / 2 - 50);
+    breakButton.class("breakbutton");
+    breakButton.mousePressed(handleButtonPress);
+    
+    allowed = true;
   }
 }
