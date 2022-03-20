@@ -95,7 +95,7 @@ function setup() {
     
     stones.push(stone);
   }
-  if(!isMobile && windowWidth > 566){
+  if(!isMobile && windowWidth > 566 || isMobile){
     zombie = createSprite(width / 2, height - 100, 50, 50);
     zombie.addAnimation("lefttoright", zombie1, zombie2, zombie1);
     zombie.addAnimation("righttoleft", zombie3, zombie4, zombie3);
@@ -464,7 +464,7 @@ function allowSmallComputerScreen(){
     zombie.velocityX = 10;
     
     backgroundscreenerror.visible = false;
-    
+
     breakButton = createButton("");
     breakButton.position(width - 200, height / 2 - 50);
     breakButton.class("breakbutton");
